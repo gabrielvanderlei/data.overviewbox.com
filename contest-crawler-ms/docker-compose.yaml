@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  node-consumer:
+    build: .
+    volumes:
+      - ./src:/home/node/app/src
