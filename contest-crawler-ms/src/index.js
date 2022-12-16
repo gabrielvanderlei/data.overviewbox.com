@@ -1,3 +1,10 @@
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue, FieldPath } = require('firebase-admin/firestore');
+
+initializeApp();
+
+const db = getFirestore();
+
 const sha512 = require('js-sha512');
 const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
@@ -64,6 +71,21 @@ let CONTEST_GLOBO_URL = `https://especiais.g1.globo.com/economia/concursos-e-emp
             });
 
             console.log(allContestsWithId)
+            
+            await db
+                .collection('rawDataMostRecent')
+                .doc('contests')
+                .collection('g1')
+                .doc('last_result')
+                .set(allContestsWithId)
+
+            await db
+                .collection('rawDataHistory')
+                .doc('contests')
+                .collection('g1')
+                .doc(String(+(new Date)))
+                .set(allContestsWithId)
+
         } catch(e) {
             console.log("Error happened");
             console.log(e.message);
