@@ -1,9 +1,20 @@
+const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
+const { getFirestore, Timestamp, FieldValue, FieldPath } = require('firebase-admin/firestore');
 const functions = require("firebase-functions");
 
-// // Create and deploy your first functions
-// // https://firebase.google.com/docs/functions/get-started
-//
-exports.helloWorld = functions.https.onRequest((request, response) => {
+initializeApp();
+
+const db = getFirestore();
+
+exports.contestData = functions.https.onRequest(async (request, response) => {
   functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase!");
+  
+  let docInformation = await db
+  .collection('rawDataMostRecent')
+  .doc('contests')
+  .collection('g1')
+  .doc('last_result')
+  .get()
+
+  response.send(docInformation.data());
 });

@@ -87,7 +87,9 @@ app.get('/', async (req, res) => {
 
     await loadData();
     await browser.close()
-                
+    
+    allContestsWithId["created_in"] = (+new Date);
+    
     await db
     .collection('rawDataMostRecent')
     .doc('contests')
